@@ -1,0 +1,5 @@
+baseURL = "http://example.org/"
+languageCode = "en-us"
+title = "Making data concrete with NamedTuples and DataClasses"
+
+
