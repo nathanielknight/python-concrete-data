@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta name="generator" content="Hugo 0.54.0" />
+    <meta charset="utf-8" />
+    <title>Making data concrete with NamedTuples and DataClasses</title>
+    <style>
+      body {
+        max-width: 33em;
+        margin: auto;
+      }
+    </style>
+  </head>
+  <body>
+    
+
+<h1 id="making-data-concrete-with-namedtuples-and-dataclasses">Making data concrete with NamedTuples and DataClasses</h1>
+
+<h2 id="nat-knight">Nat Knight</h2>
+
+<hr />
+
+<h1 id="the-plan">The plan</h1>
+
+<ul>
+<li>Motivating example</li>
+<li><code>collections.namedtuple</code></li>
+<li><code>typing.NamedTuple</code></li>
+<li><code>dataclsses.dataclass</code></li>
+<li>Sources</li>
+</ul>
+
+<hr />
+
+<h1 id="what-kind-of-problem-are-we-solving">What kind of problem are we solving?</h1>
+
+<p>Analysing a sequence of structured records</p>
+
+<ul>
+<li>List of dictionaries</li>
+<li><code>csv.DictRedaer</code></li>
+<li>Sequence of JSON objects.</li>
+<li>etc.</li>
+</ul>
+
+<hr />
+
+<h1 id="as-a-concrete-example-consider-cats">As a concrete example, consider Cats</h1>
+
+<p>Cat features:</p>
+
+<ul>
+<li>Name</li>
+<li>Mass in Kg</li>
+<li>Hair length</li>
+<li>List of attributes</li>
+</ul>
+
+<hr />
+
+<h1 id="example-processing-step">Example processing step</h1>
+
+<p>Determine if cat is round:</p>
+
+<pre><code>def is_round(cat):
+    if cat[&quot;hair_length&quot;] == &quot;long&quot;:
+        return cat[&quot;mass&quot;] &gt; 6.0
+    else:
+        return cat[&quot;mass&quot;] &gt; 8.0
+</code></pre>
+
+<hr />
+
+<h1 id="example-loading-step">Example loading step</h1>
+
+<p>Get cats to count</p>
+
+<pre><code>import csv
+
+with open(&quot;cats.csv&quot;) as inputfile:
+    cats = list(csv.DictReader(inputfile))
+</code></pre>
+
+<hr />
+
+<h1 id="the-abstract-approach">The abstract approach</h1>
+
+<p>Lists or sequences of dictionaries:</p>
+
+<p>Advantages:</p>
+
+<ul>
+<li>Supports in just about every version of Python</li>
+<li>Doesn&rsquo;t necessarily break if data changes</li>
+</ul>
+
+<p>Disadvantages:</p>
+
+<ul>
+<li>Opaque; unclear what data looks like</li>
+<li>Assumptions about data are implicit</li>
+</ul>
+
+<hr />
+
+<h1 id="processing-with-collections-namedtuple">Processing with <code>collections.namedtuple</code></h1>
+
+<pre><code class="language-python">import collections
+
+Cat = collections.namedtuple(
+    &quot;Cat&quot;,
+    ['name', 'mass', 'hair_length', 'attributes'],
+)
+
+def is_round(cat):
+    if cat.hair_length == &quot;long&quot;:
+        return cat.mass &gt; 6.0
+    else:
+        return cat.mass &gt; 8.0
+</code></pre>
+
+<hr />
+
+<h1 id="loading-data-with-a-collections-namedtuple">Loading data with a <code>collections.namedtuple</code></h1>
+
+<pre><code class="language-python">import csv
+
+with open(&quot;cats.csv&quot;) as inputfile:
+    dicts = csv.DictReader(inputfile)
+    cats = [Cat(**dct) for dct in dicts]
+</code></pre>
+
+<hr />
+
+<h1 id="collections-namedtuple"><code>collections.namedtuple</code></h1>
+
+<p>Advantages:</p>
+
+<ul>
+<li>Immutable by default</li>
+<li>Field names are explicit</li>
+<li>Supported since Python 2.6</li>
+</ul>
+
+<p>Disadvantages:</p>
+
+<ul>
+<li>Breaks if data changes</li>
+<li>Inheritance support can be problematic</li>
+</ul>
+
+<hr />
+
+<h1 id="typing-namedtuple"><code>typing.NamedTuple</code></h1>
+
+<pre><code class="language-python">import typing
+
+class Cat(typing.NamedTuple):
+    name: str
+    hair_length: str
+    mass: float
+    attributes: str
+</code></pre>
+
+<hr />
+
+<h1 id="processing-with-a-typeing-namedtuple">Processing with a <code>typeing.NamedTuple</code></h1>
+
+<pre><code class="language-python">import typing
+
+class Cat(typing.NamedTuple):
+
+    # NOTE: doesn't actually check types at run-time
+
+    name: str
+    hair_length: str
+    mass: float
+    attributes: str
+
+    def is_round(self):
+        if self.hair_length == &quot;long&quot;:
+            return self.mass &gt; 6.0
+        else:
+            return self.mass &gt; 8.0
+</code></pre>
+
+<hr />
+
+<h1 id="loading-with-a-typing-namedtuple">Loading with a <code>typing.NamedTuple</code></h1>
+
+<pre><code class="language-python">import csv
+
+with open(&quot;cats.csv&quot;) as inputfile:
+    dicts = csv.DictReader(inputfile)
+    cats = [Cat(**dct) for dct in dicts]
+    round_cats = [c for c in cats if c.is_round()]
+</code></pre>
+
+<hr />
+
+<h1 id="typing-namedtuple-1"><code>typing.NamedTuple</code></h1>
+
+<p>In addition to the features of a <code>collections.namedtuple</code>:</p>
+
+<p>Advantages:</p>
+
+<ul>
+<li>More readable</li>
+</ul>
+
+<p>Disadvantages:</p>
+
+<ul>
+<li>Only supported since Python 3.6</li>
+</ul>
+
+<hr />
+
+<h1 id="dataclasses-dataclass"><code>dataclasses.dataclass</code></h1>
+
+<ul>
+<li>New in Python 3.7</li>
+<li>Generate methods on a class so you don&rsquo;t have to write them
+
+<ul>
+<li><code>__init__</code></li>
+<li><code>__eq__</code></li>
+<li><code>__repr__</code></li>
+<li>etc.</li>
+</ul></li>
+</ul>
+
+<hr />
+
+<h1 id="processing-with-a-dataclasses-dataclass">Processing with a <code>dataclasses.dataclass</code></h1>
+
+<pre><code class="language-python">import dataclasses
+
+@dataclasses.dataclass
+class Cat:
+    name: str
+    hair_length: str
+    mass: float
+    attributes: str
+
+    def is_round(self):
+        if self.hair_length == &quot;long&quot;:
+            return self.mass &gt; 6.0
+        else:
+            return self.mass &gt; 8.0
+
+    def __post_init__(self):
+        assert self.hair_length in {&quot;short&quot;, &quot;long&quot;}
+</code></pre>
+
+<hr />
+
+<h1 id="using-inheritance-with-dataclasses-dataclass">Using inheritance with <code>dataclasses.dataclass</code></h1>
+
+<pre><code class="language-python">import dataclasses
+
+@dataclasses.dataclass
+class Animal:
+    name: str
+    mass: float
+
+@dataclasses.dataclass
+class Cat(Animal):
+    hair_length: str
+    attributes: str
+
+    def is_round(self):
+        is self.hair_length = &quot;long&quot;:
+            return self.mass &gt; 6.0
+        else:
+            return self.mass &gt; 8.0
+</code></pre>
+
+<hr />
+
+<h1 id="dataclasses-dataclass-1"><code>dataclasses.dataclass</code></h1>
+
+<p>Use case overlaps substantially with named tuples, but:</p>
+
+<p>Advantages:</p>
+
+<ul>
+<li>Inheritance works reliably</li>
+</ul>
+
+<p>Disadvantages:</p>
+
+<ul>
+<li>Not immutable by default (but can be frozen)</li>
+</ul>
+
+<hr />
+
+<h1 id="sources">Sources</h1>
+
+<ul>
+<li><a href="https://docs.python.org/3/library/collections.html#collections.namedtuple"><code>collections.namedtuple</code></a></li>
+<li><a href="https://docs.python.org/3/library/typing.html#typing.NamedTuple"><code>typing.NamedTuple</code></a></li>
+<li><a href="https://docs.python.org/3/library/dataclasses.html"><code>dataclasses</code></a></li>
+<li><a href="https://stackoverflow.com/questions/51671699/data-classes-vs-typing-namedtuple-primary-use-cases">Named tuples vs. Data classes on StackOverflow</a></li>
+<li><a href="https://www.youtube.com/watch?v=T-TwcmT6Rcw">Raymond Hettinger - Dataclasses: The code generator to end all code generators - PyCon 2018</a></li>
+</ul>
+
+  </body>
+</html>
