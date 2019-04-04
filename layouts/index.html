@@ -3,16 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <title>{{.Site.Title}}</title>
-    <style>
-      body {
-        max-width: 33em;
-        margin: auto;
-      }
-    </style>
-    <link rel="stylesheet" type="text/css" href="./solarized-dark.css" />
+    <link rel="stylesheet" href="./show.css" />
+    <link rel="stylesheet" href="./solarized-dark.css" />
   </head>
   <body>
     {{ .Content }}
+    <script src="./slidy.js"></script>
     <script src="./highlight.pack.js"></script>
     <script>
       hljs.initHighlightingOnLoad();

@@ -1,8 +1,11 @@
+<DIV class="slide cover">
+
 # Making data concrete with NamedTuples and DataClasses
 
 ## Nat Knight
 
----
+</DIV>
+<DIV class="slide">
 
 # The plan
 
@@ -12,7 +15,8 @@
 - `dataclsses.dataclass`
 - Sources
 
----
+</DIV>
+<DIV class="slide">
 
 # What kind of problem are we solving?
 
@@ -23,7 +27,8 @@ Analysing a sequence of structured records
 - Sequence of JSON objects.
 - etc.
 
----
+</DIV>
+<DIV class="slide">
 
 # As a concrete example, consider Cats
 
@@ -34,7 +39,8 @@ Cat features:
 - Hair length
 - List of attributes
 
----
+</DIV>
+<DIV class="slide">
 
 # Example processing step
 
@@ -48,7 +54,8 @@ def is_round(cat):
         return cat["mass"] > 8.0
 ```
 
----
+</DIV>
+<DIV class="slide">
 
 # Example loading step
 
@@ -61,7 +68,8 @@ with open("cats.csv") as inputfile:
     cats = list(csv.DictReader(inputfile))
 ```
 
----
+</DIV>
+<DIV class="slide">
 
 # The abstract approach
 
@@ -77,7 +85,8 @@ Disadvantages:
 - Opaque; unclear what data looks like
 - Assumptions about data are implicit
 
----
+</DIV>
+<DIV class="slide">
 
 # Processing with `collections.namedtuple`
 
@@ -96,7 +105,8 @@ def is_round(cat):
         return cat.mass > 8.0
 ```
 
----
+</DIV>
+<DIV class="slide">
 
 # Loading data with a `collections.namedtuple`
 
@@ -108,7 +118,8 @@ with open("cats.csv") as inputfile:
     cats = [Cat(**dct) for dct in dicts]
 ```
 
----
+</DIV>
+<DIV class="slide">
 
 # `collections.namedtuple`
 
@@ -123,7 +134,8 @@ Disadvantages:
 - Breaks if data changes
 - Inheritance support can be problematic
 
----
+</DIV>
+<DIV class="slide">
 
 # `typing.NamedTuple`
 
@@ -137,7 +149,8 @@ class Cat(typing.NamedTuple):
     attributes: str
 ```
 
----
+</DIV>
+<DIV class="slide">
 
 # Processing with a `typeing.NamedTuple`
 
@@ -160,7 +173,8 @@ class Cat(typing.NamedTuple):
             return self.mass > 8.0
 ```
 
----
+</DIV>
+<DIV class="slide">
 
 # Loading with a `typing.NamedTuple`
 
@@ -173,7 +187,8 @@ with open("cats.csv") as inputfile:
     round_cats = [c for c in cats if c.is_round()]
 ```
 
----
+</DIV>
+<DIV class="slide">
 
 # `typing.NamedTuple`
 
@@ -187,7 +202,8 @@ Disadvantages:
 
 - Only supported since Python 3.6
 
----
+</DIV>
+<DIV class="slide">
 
 # `dataclasses.dataclass`
 
@@ -198,7 +214,8 @@ Disadvantages:
   - `__repr__`
   - etc.
 
----
+</DIV>
+<DIV class="slide">
 
 # Processing with a `dataclasses.dataclass`
 
@@ -222,7 +239,8 @@ class Cat:
         assert self.hair_length in {"short", "long"}
 ```
 
----
+</DIV>
+<DIV class="slide">
 
 # Using inheritance with `dataclasses.dataclass`
 
@@ -246,7 +264,8 @@ class Cat(Animal):
             return self.mass > 8.0
 ```
 
----
+</DIV>
+<DIV class="slide">
 
 # `dataclasses.dataclass`
 
@@ -260,7 +279,8 @@ Disadvantages:
 
 - Not immutable by default (but can be frozen)
 
----
+</DIV>
+<DIV class="slide">
 
 # Sources
 
@@ -269,3 +289,4 @@ Disadvantages:
 - [`dataclasses`](https://docs.python.org/3/library/dataclasses.html)
 - [Named tuples vs. Data classes on StackOverflow](https://stackoverflow.com/questions/51671699/data-classes-vs-typing-namedtuple-primary-use-cases)
 - [Raymond Hettinger - Dataclasses: The code generator to end all code generators - PyCon 2018](https://www.youtube.com/watch?v=T-TwcmT6Rcw)
+  </DIV>

@@ -4,22 +4,20 @@
 	<meta name="generator" content="Hugo 0.54.0" />
     <meta charset="utf-8" />
     <title>Making data concrete with NamedTuples and DataClasses</title>
-    <style>
-      body {
-        max-width: 33em;
-        margin: auto;
-      }
-    </style>
-    <link rel="stylesheet" type="text/css" href="./solarized-dark.css" />
+    <link rel="stylesheet" href="./show.css" />
+    <link rel="stylesheet" href="./solarized-dark.css" />
   </head>
   <body>
     
+
+<p><DIV class="slide cover"></p>
 
 <h1 id="making-data-concrete-with-namedtuples-and-dataclasses">Making data concrete with NamedTuples and DataClasses</h1>
 
 <h2 id="nat-knight">Nat Knight</h2>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="the-plan">The plan</h1>
 
@@ -31,7 +29,8 @@
 <li>Sources</li>
 </ul>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="what-kind-of-problem-are-we-solving">What kind of problem are we solving?</h1>
 
@@ -44,7 +43,8 @@
 <li>etc.</li>
 </ul>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="as-a-concrete-example-consider-cats">As a concrete example, consider Cats</h1>
 
@@ -57,7 +57,8 @@
 <li>List of attributes</li>
 </ul>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="example-processing-step">Example processing step</h1>
 
@@ -70,7 +71,8 @@
         return cat[&quot;mass&quot;] &gt; 8.0
 </code></pre>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="example-loading-step">Example loading step</h1>
 
@@ -82,7 +84,8 @@ with open(&quot;cats.csv&quot;) as inputfile:
     cats = list(csv.DictReader(inputfile))
 </code></pre>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="the-abstract-approach">The abstract approach</h1>
 
@@ -102,7 +105,8 @@ with open(&quot;cats.csv&quot;) as inputfile:
 <li>Assumptions about data are implicit</li>
 </ul>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="processing-with-collections-namedtuple">Processing with <code>collections.namedtuple</code></h1>
 
@@ -120,7 +124,8 @@ def is_round(cat):
         return cat.mass &gt; 8.0
 </code></pre>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="loading-data-with-a-collections-namedtuple">Loading data with a <code>collections.namedtuple</code></h1>
 
@@ -131,7 +136,8 @@ with open(&quot;cats.csv&quot;) as inputfile:
     cats = [Cat(**dct) for dct in dicts]
 </code></pre>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="collections-namedtuple"><code>collections.namedtuple</code></h1>
 
@@ -150,7 +156,8 @@ with open(&quot;cats.csv&quot;) as inputfile:
 <li>Inheritance support can be problematic</li>
 </ul>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="typing-namedtuple"><code>typing.NamedTuple</code></h1>
 
@@ -163,7 +170,8 @@ class Cat(typing.NamedTuple):
     attributes: str
 </code></pre>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="processing-with-a-typeing-namedtuple">Processing with a <code>typeing.NamedTuple</code></h1>
 
@@ -185,7 +193,8 @@ class Cat(typing.NamedTuple):
             return self.mass &gt; 8.0
 </code></pre>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="loading-with-a-typing-namedtuple">Loading with a <code>typing.NamedTuple</code></h1>
 
@@ -197,7 +206,8 @@ with open(&quot;cats.csv&quot;) as inputfile:
     round_cats = [c for c in cats if c.is_round()]
 </code></pre>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="typing-namedtuple-1"><code>typing.NamedTuple</code></h1>
 
@@ -215,7 +225,8 @@ with open(&quot;cats.csv&quot;) as inputfile:
 <li>Only supported since Python 3.6</li>
 </ul>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="dataclasses-dataclass"><code>dataclasses.dataclass</code></h1>
 
@@ -231,7 +242,8 @@ with open(&quot;cats.csv&quot;) as inputfile:
 </ul></li>
 </ul>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="processing-with-a-dataclasses-dataclass">Processing with a <code>dataclasses.dataclass</code></h1>
 
@@ -254,7 +266,8 @@ class Cat:
         assert self.hair_length in {&quot;short&quot;, &quot;long&quot;}
 </code></pre>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="using-inheritance-with-dataclasses-dataclass">Using inheritance with <code>dataclasses.dataclass</code></h1>
 
@@ -277,7 +290,8 @@ class Cat(Animal):
             return self.mass &gt; 8.0
 </code></pre>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="dataclasses-dataclass-1"><code>dataclasses.dataclass</code></h1>
 
@@ -295,7 +309,8 @@ class Cat(Animal):
 <li>Not immutable by default (but can be frozen)</li>
 </ul>
 
-<hr />
+<p></DIV>
+<DIV class="slide"></p>
 
 <h1 id="sources">Sources</h1>
 
@@ -304,9 +319,11 @@ class Cat(Animal):
 <li><a href="https://docs.python.org/3/library/typing.html#typing.NamedTuple"><code>typing.NamedTuple</code></a></li>
 <li><a href="https://docs.python.org/3/library/dataclasses.html"><code>dataclasses</code></a></li>
 <li><a href="https://stackoverflow.com/questions/51671699/data-classes-vs-typing-namedtuple-primary-use-cases">Named tuples vs. Data classes on StackOverflow</a></li>
-<li><a href="https://www.youtube.com/watch?v=T-TwcmT6Rcw">Raymond Hettinger - Dataclasses: The code generator to end all code generators - PyCon 2018</a></li>
+<li><a href="https://www.youtube.com/watch?v=T-TwcmT6Rcw">Raymond Hettinger - Dataclasses: The code generator to end all code generators - PyCon 2018</a>
+</DIV></li>
 </ul>
 
+    <script src="./slidy.js"></script>
     <script src="./highlight.pack.js"></script>
     <script>
       hljs.initHighlightingOnLoad();
