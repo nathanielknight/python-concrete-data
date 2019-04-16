@@ -2,7 +2,20 @@
 
 # Making data concrete with NamedTuples and DataClasses
 
-## Nat Knight
+## Nat Knight, Green Knight Software Development
+
+</DIV>
+<DIV class="slide">
+
+- Independent Software Developer
+- He/Him
+- Mostly Python
+- Different fields
+  - Web
+  - Bioinformatics
+  - Cloud computing
+  - Finance
+  - Atmospheric Science
 
 </DIV>
 <DIV class="slide">
@@ -71,6 +84,32 @@ with open("cats.csv") as inputfile:
 </DIV>
 <DIV class="slide">
 
+# Example analysis
+
+```
+import csv
+
+def is_round(cat):
+    if cat["hair_length"] == "long":
+        return cat["mass"] > 6.0
+    else:
+        return cat["mass"] > 8.0
+
+
+with open("cats.csv") as inputfile:
+    cats = list(csv.DictReader(inputfile))
+
+round_cats = 0
+for cat in cats:
+    if is_round(cat):
+        round_cats = round_cats + 1
+
+print("{} cats ar  round".format(round_cats))
+```
+
+</DIV>
+<DIV class="slide">
+
 # The abstract approach
 
 Lists or sequences of dictionaries:
@@ -121,13 +160,40 @@ with open("cats.csv") as inputfile:
 </DIV>
 <DIV class="slide">
 
+```
+import collections
+import csv
+
+Cat = collections.namedtuple(
+    "Cat",
+    ['name', 'mass', 'hair_length', 'attributes'],
+)
+
+def is_round(cat):
+    if cat.hair_length == "long":
+        return cat.mass > 6.0
+    else:
+        return cat.mass > 8.0
+
+with open("cats.csv") as inf:
+    dicts = csv.DictReader(inputfile)
+    cats = [Cat(**xs) for xs in dicts]
+
+round_cats = len([c for c in cats if is_round(c)])
+print("{} round cats".format(round_cats))
+```
+
+</DIV>
+<DIV class="slide">
+
 # `collections.namedtuple`
+
+Supported since Python 2.6
 
 Advantages:
 
 - Immutable by default
 - Field names are explicit
-- Supported since Python 2.6
 
 Disadvantages:
 
@@ -147,19 +213,19 @@ class Cat(typing.NamedTuple):
     hair_length: str
     mass: float
     attributes: str
+
+# NOTE: Types have no effect at runtime
 ```
 
 </DIV>
 <DIV class="slide">
 
-# Processing with a `typeing.NamedTuple`
+# Processing with a `typing.NamedTuple`
 
 ```python
 import typing
 
 class Cat(typing.NamedTuple):
-
-    # NOTE: doesn't actually check types at run-time
 
     name: str
     hair_length: str
@@ -289,4 +355,9 @@ Disadvantages:
 - [`dataclasses`](https://docs.python.org/3/library/dataclasses.html)
 - [Named tuples vs. Data classes on StackOverflow](https://stackoverflow.com/questions/51671699/data-classes-vs-typing-namedtuple-primary-use-cases)
 - [Raymond Hettinger - Dataclasses: The code generator to end all code generators - PyCon 2018](https://www.youtube.com/watch?v=T-TwcmT6Rcw)
+
+Get the slides at
+
+    gksd.link/python-concrete-data
+
   </DIV>
