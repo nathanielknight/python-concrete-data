@@ -14,7 +14,25 @@
 
 <h1 id="making-data-concrete-with-namedtuples-and-dataclasses">Making data concrete with NamedTuples and DataClasses</h1>
 
-<h2 id="nat-knight">Nat Knight</h2>
+<h2 id="nat-knight-green-knight-software-development">Nat Knight, Green Knight Software Development</h2>
+
+<p></DIV>
+<DIV class="slide"></p>
+
+<ul>
+<li>Independent Software Developer</li>
+<li>He/Him</li>
+<li>Mostly Python</li>
+<li>Different fields
+
+<ul>
+<li>Web</li>
+<li>Bioinformatics</li>
+<li>Cloud computing</li>
+<li>Finance</li>
+<li>Atmospheric Science</li>
+</ul></li>
+</ul>
 
 <p></DIV>
 <DIV class="slide"></p>
@@ -87,6 +105,31 @@ with open(&quot;cats.csv&quot;) as inputfile:
 <p></DIV>
 <DIV class="slide"></p>
 
+<h1 id="example-analysis">Example analysis</h1>
+
+<pre><code>import csv
+
+def is_round(cat):
+    if cat[&quot;hair_length&quot;] == &quot;long&quot;:
+        return cat[&quot;mass&quot;] &gt; 6.0
+    else:
+        return cat[&quot;mass&quot;] &gt; 8.0
+
+
+with open(&quot;cats.csv&quot;) as inputfile:
+    cats = list(csv.DictReader(inputfile))
+
+round_cats = 0
+for cat in cats:
+    if is_round(cat):
+        round_cats = round_cats + 1
+
+print(&quot;{} cats ar  round&quot;.format(round_cats))
+</code></pre>
+
+<p></DIV>
+<DIV class="slide"></p>
+
 <h1 id="the-abstract-approach">The abstract approach</h1>
 
 <p>Lists or sequences of dictionaries:</p>
@@ -139,14 +182,40 @@ with open(&quot;cats.csv&quot;) as inputfile:
 <p></DIV>
 <DIV class="slide"></p>
 
+<pre><code>import collections
+import csv
+
+Cat = collections.namedtuple(
+    &quot;Cat&quot;,
+    ['name', 'mass', 'hair_length', 'attributes'],
+)
+
+def is_round(cat):
+    if cat.hair_length == &quot;long&quot;:
+        return cat.mass &gt; 6.0
+    else:
+        return cat.mass &gt; 8.0
+
+with open(&quot;cats.csv&quot;) as inf:
+    dicts = csv.DictReader(inputfile)
+    cats = [Cat(**xs) for xs in dicts]
+
+round_cats = len([c for c in cats if is_round(c)])
+print(&quot;{} round cats&quot;.format(round_cats))
+</code></pre>
+
+<p></DIV>
+<DIV class="slide"></p>
+
 <h1 id="collections-namedtuple"><code>collections.namedtuple</code></h1>
+
+<p>Supported since Python 2.6</p>
 
 <p>Advantages:</p>
 
 <ul>
 <li>Immutable by default</li>
 <li>Field names are explicit</li>
-<li>Supported since Python 2.6</li>
 </ul>
 
 <p>Disadvantages:</p>
@@ -168,18 +237,18 @@ class Cat(typing.NamedTuple):
     hair_length: str
     mass: float
     attributes: str
+
+# NOTE: Types have no effect at runtime
 </code></pre>
 
 <p></DIV>
 <DIV class="slide"></p>
 
-<h1 id="processing-with-a-typeing-namedtuple">Processing with a <code>typeing.NamedTuple</code></h1>
+<h1 id="processing-with-a-typing-namedtuple">Processing with a <code>typing.NamedTuple</code></h1>
 
 <pre><code class="language-python">import typing
 
 class Cat(typing.NamedTuple):
-
-    # NOTE: doesn't actually check types at run-time
 
     name: str
     hair_length: str
@@ -319,9 +388,15 @@ class Cat(Animal):
 <li><a href="https://docs.python.org/3/library/typing.html#typing.NamedTuple"><code>typing.NamedTuple</code></a></li>
 <li><a href="https://docs.python.org/3/library/dataclasses.html"><code>dataclasses</code></a></li>
 <li><a href="https://stackoverflow.com/questions/51671699/data-classes-vs-typing-namedtuple-primary-use-cases">Named tuples vs. Data classes on StackOverflow</a></li>
-<li><a href="https://www.youtube.com/watch?v=T-TwcmT6Rcw">Raymond Hettinger - Dataclasses: The code generator to end all code generators - PyCon 2018</a>
-</DIV></li>
+<li><a href="https://www.youtube.com/watch?v=T-TwcmT6Rcw">Raymond Hettinger - Dataclasses: The code generator to end all code generators - PyCon 2018</a></li>
 </ul>
+
+<p>Get the slides at</p>
+
+<pre><code>gksd.link/python-concrete-data
+</code></pre>
+
+<p></DIV></p>
 
     <script src="./slidy.js"></script>
     <script src="./highlight.pack.js"></script>
