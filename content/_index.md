@@ -36,7 +36,7 @@
 Analysing a sequence of structured records
 
 - List of dictionaries
-- `csv.DictRedaer`
+- `csv.DictReader`
 - Sequence of JSON objects.
 - etc.
 
@@ -104,7 +104,7 @@ for cat in cats:
     if is_round(cat):
         round_cats = round_cats + 1
 
-print("{} cats ar  round".format(round_cats))
+print("{} cats are round".format(round_cats))
 ```
 
 </DIV>
@@ -360,4 +360,80 @@ Get the slides at
 
     gksd.link/python-concrete-data
 
-  </DIV>
+Source at
+
+    github.com/neganp/python-concrete-data
+
+A video of the talk is available on [YouTube](https://www.youtube.com/watch?v=UEWp44o_818).
+
+</DIV>
+<DIV class="slide">
+# Q & A
+
+After the talk, I spoke to some folks at the meetup and answered questions.
+Here's a selection of what we talked about.
+
+## What are the performance implications of Named Tuples and Data Classes?
+
+As with all performance advice,
+I'll preface this by saying that
+performance is a tricky, fickle subject
+and the solution to performance problems
+is almost always to profile your code,
+see what's slow,
+and focus on that.
+
+According to their documentation, named tuples should as memory efficient
+as a tuple, which [should be more efficient than a class](https://stackoverflow.com/questions/45123238/python-class-vs-tuple-huge-memory-overhead),
+but using [`__slots__`](https://docs.python.org/3.7/reference/datamodel.html#slots)
+to reduce your class' memory requirements
+might be as good or better.
+
+In terms of accessing fields,
+[named tuples are slower than classes](https://stackoverflow.com/questions/31199650/why-is-accessing-a-namedtuple-by-field-name-slower-than-accessing-a-classs-memb).
+
+Seriously though, neither tool
+should have a huge impact on performance,
+so if you're striving to make your code
+as performant as possible
+you should probably focus on other things.
+
+## How do Named Tuples and Data Classes compare to [Frictionless Data][frictionless]?
+
+[frictionless]: https://frictionlessdata.io/
+
+I hadn't heard of Frictionless Data before. It's a collection of specifications
+and tools whose objective is to make it easy to send data between different
+programs, systems, and languages.
+
+Frictionless data is a much, much bigger tool that would impact your whole
+data collection and analysis project. Named tuples and data classes are much
+smaller, more ad-hoc things that just make your Python code a little more
+manageable.
+
+## What are some strategies for a data pipeline that adds fields to the data that flows through it?
+
+Named tuples are immutable, and they don't subclass particularly well, so in my experience the
+best way to add fields to them is either to embed them in a larger data-structure or create a new
+named tuple with the new fields and pass that on instead.
+
+Data classes subclass nicely, which could be a good way to add fields.
+
+In both cases, adding a new field is more work than adding a field to a dictionary, so if you
+have data that needs to grow as it flows through the pipeline, you might prefer to stick with
+good old dictionaries.
+
+## Where should code for serializing/de-serializing data in these formats live?
+
+As long as the values in their fields are JSON friendly, named tuples transform
+beautifully to and from JSON. You can use
+[`namedtuple._asdict`](https://docs.python.org/3/library/collections.html#collections.somenamedtuple._asdict)
+to get the data into whatever JSON-generating function you're using
+(like [`json.dumps`](https://docs.python.org/3.7/library/json.html#json.dumps)), and you can de-serialize
+it using your named tuple and
+["kwargs expansion"](https://docs.python.org/dev/tutorial/controlflow.html#more-on-defining-functions)
+to keep the code concise.
+
+Data classes are just classes, so in their case I'd stick to whatever strategy you use for regular classes.
+
+</DIV>
