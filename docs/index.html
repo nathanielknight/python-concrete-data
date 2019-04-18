@@ -56,7 +56,7 @@
 
 <ul>
 <li>List of dictionaries</li>
-<li><code>csv.DictRedaer</code></li>
+<li><code>csv.DictReader</code></li>
 <li>Sequence of JSON objects.</li>
 <li>etc.</li>
 </ul>
@@ -124,7 +124,7 @@ for cat in cats:
     if is_round(cat):
         round_cats = round_cats + 1
 
-print(&quot;{} cats ar  round&quot;.format(round_cats))
+print(&quot;{} cats are round&quot;.format(round_cats))
 </code></pre>
 
 <p></DIV>
@@ -395,6 +395,82 @@ class Cat(Animal):
 
 <pre><code>gksd.link/python-concrete-data
 </code></pre>
+
+<p>Source at</p>
+
+<pre><code>github.com/neganp/python-concrete-data
+</code></pre>
+
+<p>A video of the talk is available on <a href="https://www.youtube.com/watch?v=UEWp44o_818">YouTube</a>.</p>
+
+<p></DIV>
+<DIV class="slide"></p>
+
+<h1 id="q-a">Q &amp; A</h1>
+
+<p>After the talk, I spoke to some folks at the meetup and answered questions.
+Here&rsquo;s a selection of what we talked about.</p>
+
+<h2 id="what-are-the-performance-implications-of-named-tuples-and-data-classes">What are the performance implications of Named Tuples and Data Classes?</h2>
+
+<p>As with all performance advice,
+I&rsquo;ll preface this by saying that
+performance is a tricky, fickle subject
+and the solution to performance problems
+is almost always to profile your code,
+see what&rsquo;s slow,
+and focus on that.</p>
+
+<p>According to their documentation, named tuples should as memory efficient
+as a tuple, which <a href="https://stackoverflow.com/questions/45123238/python-class-vs-tuple-huge-memory-overhead">should be more efficient than a class</a>,
+but using <a href="https://docs.python.org/3.7/reference/datamodel.html#slots"><code>__slots__</code></a>
+to reduce your class&rsquo; memory requirements
+might be as good or better.</p>
+
+<p>In terms of accessing fields,
+<a href="https://stackoverflow.com/questions/31199650/why-is-accessing-a-namedtuple-by-field-name-slower-than-accessing-a-classs-memb">named tuples are slower than classes</a>.</p>
+
+<p>Seriously though, neither tool
+should have a huge impact on performance,
+so if you&rsquo;re striving to make your code
+as performant as possible
+you should probably focus on other things.</p>
+
+<h2 id="how-do-named-tuples-and-data-classes-compare-to-frictionless-data-frictionless">How do Named Tuples and Data Classes compare to <a href="https://frictionlessdata.io/">Frictionless Data</a>?</h2>
+
+<p>I hadn&rsquo;t heard of Frictionless Data before. It&rsquo;s a collection of specifications
+and tools whose objective is to make it easy to send data between different
+programs, systems, and languages.</p>
+
+<p>Frictionless data is a much, much bigger tool that would impact your whole
+data collection and analysis project. Named tuples and data classes are much
+smaller, more ad-hoc things that just make your Python code a little more
+manageable.</p>
+
+<h2 id="what-are-some-strategies-for-a-data-pipeline-that-adds-fields-to-the-data-that-flows-through-it">What are some strategies for a data pipeline that adds fields to the data that flows through it?</h2>
+
+<p>Named tuples are immutable, and they don&rsquo;t subclass particularly well, so in my experience the
+best way to add fields to them is either to embed them in a larger data-structure or create a new
+named tuple with the new fields and pass that on instead.</p>
+
+<p>Data classes subclass nicely, which could be a good way to add fields.</p>
+
+<p>In both cases, adding a new field is more work than adding a field to a dictionary, so if you
+have data that needs to grow as it flows through the pipeline, you might prefer to stick with
+good old dictionaries.</p>
+
+<h2 id="where-should-code-for-serializing-de-serializing-data-in-these-formats-live">Where should code for serializing/de-serializing data in these formats live?</h2>
+
+<p>As long as the values in their fields are JSON friendly, named tuples transform
+beautifully to and from JSON. You can use
+<a href="https://docs.python.org/3/library/collections.html#collections.somenamedtuple._asdict"><code>namedtuple._asdict</code></a>
+to get the data into whatever JSON-generating function you&rsquo;re using
+(like <a href="https://docs.python.org/3.7/library/json.html#json.dumps"><code>json.dumps</code></a>), and you can de-serialize
+it using your named tuple and
+<a href="https://docs.python.org/dev/tutorial/controlflow.html#more-on-defining-functions">&ldquo;kwargs expansion&rdquo;</a>
+to keep the code concise.</p>
+
+<p>Data classes are just classes, so in their case I&rsquo;d stick to whatever strategy you use for regular classes.</p>
 
 <p></DIV></p>
 
